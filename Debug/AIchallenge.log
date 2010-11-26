@@ -1,4 +1,4 @@
-﻿Build started 26/11/2010 14:04:45.
+﻿Build started 26/11/2010 14:22:10.
      1>Project "C:\cygwin\home\C\Skynet\AIchallenge\AIchallenge.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\AIchallenge.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -20,12 +20,7 @@
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\AIchallenge.exe.embed.manifest" /manifest Debug\AIchallenge.exe.intermediate.manifest
          All outputs are up-to-date.
        LinkEmbedManifest:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\cygwin\home\C\Skynet\AIchallenge\Debug\AIchallenge.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\AIchallenge.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\cygwin\home\C\Skynet\AIchallenge\Debug\AIchallenge.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\cygwin\home\C\Skynet\AIchallenge\Debug\AIchallenge.lib" /MACHINE:X86 Debug\AIchallenge.res
-         Debug\AIchallenge.exe.embed.manifest.res
-         Debug\AbstractGame.obj
-         Debug\AIchallenge.obj
-         Debug\GameEngine.obj
-         Debug\GameWinMain.obj
+         All outputs are up-to-date.
          AIchallenge.vcxproj -> C:\cygwin\home\C\Skynet\AIchallenge\Debug\AIchallenge.exe
        FinalizeBuildStatus:
          Deleting file "Debug\AIchallenge.unsuccessfulbuild".
@@ -34,4 +29,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.40
+Time Elapsed 00:00:01.49

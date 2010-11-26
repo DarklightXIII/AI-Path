@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------
 int _fpst;
 
-AIchallenge::AIchallenge():m_gridSize(20),
+AIchallenge::AIchallenge():m_gridSize(40),
 							m_default(),
 							m_isRigidCell(),
 							m_filler(),
@@ -186,7 +186,7 @@ AI_PLAYER AIchallenge::MoveAIplayer(AI_PLAYER player)
 		m_isRigidCell[player.xPos+1][player.yPos] &&
 		m_isRigidCell[player.xPos][player.yPos+1])
 	{
-		GAME_ENGINE->MessageBox("skynet lost the game");
+		GAME_ENGINE->MessageBox(String(player.name) + " lost the game");
 		GAME_ENGINE->SetFrameRate(0);
 	}
 	else
@@ -226,17 +226,17 @@ AI_PLAYER AIchallenge::MoveAIplayer(AI_PLAYER player, int pattern)
 	//Fill Algorythm
 	m_isRigidCell[player.xPos][player.yPos] = true;
 
-	if(!m_isRigidCell[player.xPos + 1][player.yPos])
+	if(!m_isRigidCell[player.xPos - 1][player.yPos])
 	{
-		player.xPos++;
+		player.xPos--;
 	}
 	else if(!m_isRigidCell[player.xPos][player.yPos -1])
 	{
 		player.yPos--;
 	}
-	else if(!m_isRigidCell[player.xPos - 1][player.yPos])
+	else if(!m_isRigidCell[player.xPos + 1][player.yPos])
 	{
-		player.xPos--;
+		player.xPos++;
 	}
 	else if(!m_isRigidCell[player.xPos][player.yPos +1])
 	{
@@ -253,7 +253,7 @@ void AIchallenge::catchImmobilised(AI_PLAYER player)
 	m_isRigidCell[player.xPos+1][player.yPos] &&
 	m_isRigidCell[player.xPos][player.yPos+1])
 	{
-		GAME_ENGINE->MessageBox("skynet lost the game");
+		GAME_ENGINE->MessageBox(String(player.name) + " lost the game");
 		GAME_ENGINE->SetFrameRate(0);
 	}
 }

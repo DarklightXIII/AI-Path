@@ -86,6 +86,7 @@ public:
 	AI_PLAYER MoveAIplayer(AI_PLAYER player);
 	AI_PLAYER MoveAIplayer(AI_PLAYER player, int pattern);
 	void catchImmobilised(AI_PLAYER player);
+	bool IsDeathCorner(int x, int y);
 
 	void CallAction(Caller* callerPtr);
 
