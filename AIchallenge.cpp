@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------
 int _fpst;
 
-AIchallenge::AIchallenge():m_gridSize(15),
+AIchallenge::AIchallenge():m_gridSize(40),
 							m_default(),
 							m_isRigidCell()
 {
@@ -68,6 +68,8 @@ void AIchallenge::GameStart()
 		for(int y = 0; y < (GAME_ENGINE->GetHeight() / m_gridSize);++y)
 		{
 			m_isRigidCell[x][y] = false;
+			m_isRigidCell[0][y] = true;
+			m_isRigidCell[GAME_ENGINE->GetWidth() / m_gridSize - 1][y] = true;
 		}
 		m_isRigidCell[x][0] = true;
 		m_isRigidCell[x][GAME_ENGINE->GetHeight() / m_gridSize - 1] = true;
@@ -75,98 +77,27 @@ void AIchallenge::GameStart()
 }
 void AIchallenge::GameEnd()
 {
-	// Plaats hier de code die moet uitgevoerd worden bij het afsluiten van het spel 
 }
 void AIchallenge::GameActivate()
 {
-	// Plaats hier de code die moet uitgevoerd worden bij het actief worden van het spelvenster 
-
-	/* Voorbeeld:
-	GAME_ENGINE->SetSleep(false);
-	*/
 }
 void AIchallenge::GameDeactivate()
 {
-	// Plaats hier de code die moet uitgevoerd worden bij het inactief worden van het spelvenster 
-
-	/* Voorbeeld:
-	GAME_ENGINE->SetSleep(true);
-	*/
 }
-
 void AIchallenge::MouseButtonAction(bool isLeft, bool isDown, int x, int y, WPARAM wParam)
 {	
-	// Plaats hier de code die moet uitgevoerd worden wanneer het spel een actie van een muisknop registreert 
-
-	/* Voorbeeld:
-	if (isLeft && isDown) // is het een linkermuisclick
-	{	
-		if ( x > 261 && x < 261 + 117 ) // click ligt binnen de x coordinaten
-		{
-			if ( y > 182 && y < 182 + 33 ) // click ligt binnen de y coordinaten
-			{
-				GAME_ENGINE->MessageBox("Geclickt.");
-			}
-		}
-	}
-	*/
 }
 void AIchallenge::MouseMove(int x, int y, WPARAM wParam)
 {	
-	// Plaats hier de code die moet uitgevoerd worden wanneer de muis over het spelvenster beweegt 
-
-	/* Voorbeeld:
-	if (isLeft && isDown) // is het een linkermuisclick
-	{	
-		if ( x > 261 && x < 261 + 117 ) // click ligt binnen de x coordinaten
-		{
-			if ( y > 182 && y < 182 + 33 ) // click ligt binnen de y coordinaten
-			{
-				GAME_ENGINE->MessageBox("Da mouse wuz here.");
-			}
-		}
-	}
-	*/
 }
 void AIchallenge::CheckKeyboard()
 {	
-	// Hier kun je controleren of een bepaalde toets ingedrukt is
-	// Wordt 1x per frame uitgevoerd
-
-	/* Voorbeeld:
-	if (GAME_ENGINE->IsKeyDown('K')) xIcon -= xSpeed;
-	if (GAME_ENGINE->IsKeyDown('L')) yIcon += xSpeed;
-	if (GAME_ENGINE->IsKeyDown('M')) xIcon += xSpeed;
-	if (GAME_ENGINE->IsKeyDown('O')) yIcon -= ySpeed;
-	*/
 }
 void AIchallenge::KeyPressed(TCHAR cKey)
 {
-	// Plaats hier de code die moet uitgevoerd worden wanneer op een opgegeven toets geclickt wordt
-	// Wordt uitgevoerd van zodra de opgegeven toets gelost wordt (gebeurt asynchroon)
-
-	/* Voorbeeld:
-	switch (cKey)
-	{
-	case 'K': case VK_LEFT:
-		MoveBlock(DIR_LEFT);
-		break;
-	case 'L': case VK_DOWN:
-		MoveBlock(DIR_DOWN);
-		break;
-	case 'M': case VK_RIGHT:
-		MoveBlock(DIR_RIGHT);
-		break;
-	case 'A': case VK_UP:
-		RotateBlock();
-		break;
-	case VK_ESCAPE:
-	}
-	*/
 }
 void AIchallenge::GamePaint(RECT rect)
 {
-	// Plaats hier de code die moet uitgevoerd worden wanneer het spel zich tekent naar het scherm 
 }
 void AIchallenge::GameCycle(RECT rect)
 {
@@ -186,7 +117,7 @@ void AIchallenge::GameCycle(RECT rect)
 
 
 	//Move the AI and assign rigidBody
-	if(_fpst % 15== 0)
+	if(_fpst % 2== 0)
 	{
 		m_isRigidCell[m_default.xPos][m_default.yPos] = true;
 		
@@ -225,9 +156,46 @@ void AIchallenge::DrawRigidBodies()
 
 AI_PLAYER AIchallenge::MoveAIplayer(AI_PLAYER player)
 {
-	//if(m_isRigidCell[]
-	player.xPos++;
-
+	//move algorythm
+	player.direction = rand() % 4;
+	
+	//catch loss (needs fix: when hitting wall)
+	if(m_isRigidCell[player.xPos -1][player.yPos] &&
+		m_isRigidCell[player.xPos][player.yPos-1] &&
+		m_isRigidCell[player.xPos+1][player.yPos] &&
+		m_isRigidCell[player.xPos][player.yPos+1])
+	{
+		GAME_ENGINE->MessageBox("skynet lost the game");
+		GAME_ENGINE->SetFrameRate(0);
+	}
+	else
+	{
+		switch(player.direction)
+		{
+		case 0:
+			if(player.xPos <= 0) break;
+			if(m_isRigidCell[player.xPos -1][player.yPos])break;
+			player.xPos--;
+			break;
+		case 1:
+			if(player.yPos <= 0) break;
+			if(m_isRigidCell[player.xPos][player.yPos-1])break;
+			player.yPos--;
+			break;
+		case 2:
+			if(player.xPos >= GAME_ENGINE->GetWidth() / m_gridSize) break;
+			if(m_isRigidCell[player.xPos+1][player.yPos])break;
+			player.xPos++;
+			break;
+		case 3:
+			if(player.yPos >= GAME_ENGINE->GetHeight() / m_gridSize) break;
+			if(m_isRigidCell[player.xPos][player.yPos+1])break;
+			player.yPos++;
+			break;
+		default:
+			break;
+		}
+	}
 	return player;
 }
 
