@@ -23,9 +23,11 @@
 //-----------------------------------------------------------------
 int _fpst;
 
-AIchallenge::AIchallenge():m_gridSize(40),
+AIchallenge::AIchallenge():m_gridSize(20),
 							m_default(),
-							m_isRigidCell()
+							m_isRigidCell(),
+							m_filler(),
+							m_berserker()
 {
 
 }
@@ -46,17 +48,30 @@ void AIchallenge::GameInitialize(HINSTANCE hInstance)
 	GAME_ENGINE->RunGameLoop(true);
 
 	// Stel de optionele waarden in
-	GAME_ENGINE->SetWidth(640);
-	GAME_ENGINE->SetHeight(480);
-    GAME_ENGINE->SetFrameRate(50);
+	GAME_ENGINE->SetWidth(800);
+	GAME_ENGINE->SetHeight(800);
+    GAME_ENGINE->SetFrameRate(20);
 }
 
 void AIchallenge::GameStart()
 {
-	//initialising default AI
+	//initialising the AI's
+	m_default.name = "default test AI";
 	m_default.xPos = GAME_ENGINE->GetWidth() / 2 / m_gridSize;
 	m_default.yPos = GAME_ENGINE->GetHeight() / 2 / m_gridSize;
-	m_default.color = RGB(255,150,150);
+	m_default.playerColor = RGB(255,150,150);
+
+	m_berserker.name = "berserker (random AI)";
+	m_berserker.xPos = 2;
+	m_berserker.yPos = GAME_ENGINE->GetHeight() / 2 / m_gridSize;
+	m_berserker.playerColor = RGB(255,0,0);
+	m_berserker.fillColor = RGB(255,150,150);
+
+	m_filler.name = "filler (fill AI)";
+	m_filler.xPos = GAME_ENGINE->GetWidth() / m_gridSize - 2;
+	m_filler.yPos = GAME_ENGINE->GetHeight() / 2 / m_gridSize;
+	m_filler.playerColor = RGB(0,0,255);
+	m_filler.fillColor = RGB(150,150,255);
 	
 	//Rigid Cell List Allocating
 	m_isRigidCell = new bool*[GAME_ENGINE->GetWidth() / m_gridSize];
@@ -119,32 +134,34 @@ void AIchallenge::GameCycle(RECT rect)
 
 
 
-	//Move the AI and assign rigidBody
+	//Move the AI's
 	if(_fpst % 2== 0)
 	{
-		m_isRigidCell[m_default.xPos][m_default.yPos] = true;
-		
-		m_default = MoveAIplayer(m_default);
+		//m_default = MoveAIplayer(m_default);
+		m_berserker = MoveAIplayer(m_berserker);
+		m_filler = MoveAIplayer(m_filler,0);
 	}
 
 	//Draw the rigid cells
 	DrawRigidBodies();
 
 	//Draw the AI
-	DrawAIplayer(m_default);
+	//DrawAIplayer(m_default);
+	DrawAIplayer(m_berserker);
+	DrawAIplayer(m_filler);
 
 	_fpst++;
 }
 
 void AIchallenge::DrawAIplayer(AI_PLAYER player)
 {
-	GAME_ENGINE->SetColor(player.color);
+	GAME_ENGINE->SetColor(player.playerColor);
 	GAME_ENGINE->FillRect(player.xPos * m_gridSize + 1, player.yPos * m_gridSize + 1,m_gridSize -1,m_gridSize-1);
 }
 
 void AIchallenge::DrawRigidBodies()
 {
-	GAME_ENGINE->SetColor(RGB(180,180,255));
+	GAME_ENGINE->SetColor(RGB(120,120,120));
 	for(int x = 0;x < GAME_ENGINE->GetWidth() / m_gridSize;++x)
 	{
 		for(int y = 0; y < (GAME_ENGINE->GetHeight() / m_gridSize);++y)
@@ -159,10 +176,11 @@ void AIchallenge::DrawRigidBodies()
 
 AI_PLAYER AIchallenge::MoveAIplayer(AI_PLAYER player)
 {
-	//move algorythm
+	//random move algorythm
+	m_isRigidCell[player.xPos][player.yPos] = true;
 	player.direction = rand() % 4;
 	
-	//catch loss (needs fix: when hitting wall)
+	//catch loss (fix:wallDrawn)
 	if(m_isRigidCell[player.xPos -1][player.yPos] &&
 		m_isRigidCell[player.xPos][player.yPos-1] &&
 		m_isRigidCell[player.xPos+1][player.yPos] &&
@@ -173,6 +191,7 @@ AI_PLAYER AIchallenge::MoveAIplayer(AI_PLAYER player)
 	}
 	else
 	{
+		//catch rigidwall
 		switch(player.direction)
 		{
 		case 0:
@@ -200,6 +219,43 @@ AI_PLAYER AIchallenge::MoveAIplayer(AI_PLAYER player)
 		}
 	}
 	return player;
+}
+
+AI_PLAYER AIchallenge::MoveAIplayer(AI_PLAYER player, int pattern)
+{
+	//Fill Algorythm
+	m_isRigidCell[player.xPos][player.yPos] = true;
+
+	if(!m_isRigidCell[player.xPos + 1][player.yPos])
+	{
+		player.xPos++;
+	}
+	else if(!m_isRigidCell[player.xPos][player.yPos -1])
+	{
+		player.yPos--;
+	}
+	else if(!m_isRigidCell[player.xPos - 1][player.yPos])
+	{
+		player.xPos--;
+	}
+	else if(!m_isRigidCell[player.xPos][player.yPos +1])
+	{
+		player.yPos++;
+	}
+	catchImmobilised(player);
+	return player;
+}
+
+void AIchallenge::catchImmobilised(AI_PLAYER player)
+{
+	if(m_isRigidCell[player.xPos -1][player.yPos] &&
+	m_isRigidCell[player.xPos][player.yPos-1] &&
+	m_isRigidCell[player.xPos+1][player.yPos] &&
+	m_isRigidCell[player.xPos][player.yPos+1])
+	{
+		GAME_ENGINE->MessageBox("skynet lost the game");
+		GAME_ENGINE->SetFrameRate(0);
+	}
 }
 
 void AIchallenge::CallAction(Caller* callerPtr)

@@ -1,4 +1,4 @@
-﻿Build started 26/11/2010 1:22:07.
+﻿Build started 26/11/2010 14:04:45.
      1>Project "C:\cygwin\home\C\Skynet\AIchallenge\AIchallenge.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\AIchallenge.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -34,4 +34,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.52
+Time Elapsed 00:00:01.40

@@ -34,8 +34,9 @@ enum DIRECTION
 
 struct AI_PLAYER
 {
+	String name;
 	int xPos, yPos;
-	COLORREF color;
+	COLORREF playerColor, fillColor;
 	//DIRECTION direction;
 	int direction;
 };
@@ -83,6 +84,8 @@ public:
 	void DrawAIplayer(AI_PLAYER player);
 	void DrawRigidBodies();
 	AI_PLAYER MoveAIplayer(AI_PLAYER player);
+	AI_PLAYER MoveAIplayer(AI_PLAYER player, int pattern);
+	void catchImmobilised(AI_PLAYER player);
 
 	void CallAction(Caller* callerPtr);
 
@@ -92,6 +95,7 @@ private:
 	// -------------------------
 	int m_gridSize;
 	AI_PLAYER m_default;
+	AI_PLAYER m_berserker, m_filler;
 	//GRID m_isRigidCell;
 	bool **m_isRigidCell;
 	// -------------------------
