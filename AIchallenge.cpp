@@ -1,8 +1,11 @@
 //-----------------------------------------------------------------
-// Game File
+// GAME ENGINE
 // C++ Source - AIchallenge.cpp - version 2010 v2_07
 // Copyright Kevin Hoefman - kevin.hoefman@howest.be
 // http://www.digitalartsandentertainment.be/
+//
+//	AI Algorythm and game platform - (c)2010
+//	by Cedric Van der Kelen - Cedric.Van.der.Kelen@howest.be
 //-----------------------------------------------------------------
 
 //-----------------------------------------------------------------
